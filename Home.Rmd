@@ -65,9 +65,7 @@ The estimated coefficients indicate the change in the log odds of the response w
 confint(Fit_final)
 ```
 
-#### Goodness of Fit
-
-*Hosmer-Lemeshow Test*
+#### Hosmer-Lemeshow Goodness of Fit Test
 
 We apply the Hosmer-Lemeshow test to assess the fit of the model. We check the null hypothesis that the specified logistic regression model is the correct model. Since the p-value is high, we fail to reject the null hypothesis.
 ```{r message = FALSE}
@@ -317,7 +315,7 @@ plt.show()
 knitr::include_graphics("./fig_py/Log_ROC.png")
 ```
 
-#### Hosman-Lemeshow Goodness of Fit Test
+#### Hosmer-Lemeshow Goodness of Fit Test
 
 The Hosmer-Lemeshow test is a statistical test for goodness of fit for logistic regression models. It is used frequently in risk prediction models. The test assesses whether or not the observed event rates match expected event rates in subgroups of the model population. The Hosmer-Lemeshow test specifically identifies subgroups as the deciles of fitted risk values.
 
@@ -509,9 +507,7 @@ the fitted values of our model using the following command:
 predict p
 ```
 
-#### Goodness of Fit
-
-*Hosmer-Lemeshow Test* 
+#### Hosmer-Lemeshow Goodness of Fit Test
 
 
 The Hosmer-Lemeshow Test is a goodness-of-fit test for logistic regression 
