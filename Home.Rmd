@@ -144,7 +144,7 @@ from sklearn.metrics import classification_report
 from scipy.stats import chi2
 ```
 
-#### Importing Data and Data Cleaning
+#### Loading Dataframe and Numerical Summaries
 
 In this tutorial, we use pima data as our datasets. In order to fit package in python. We first divide our model into dependent variable and independent variables. Besides, since all independent variables here are numeric, we do not need to change them into factor. However, when utilizing $sm.Logit()$ in python, it doesn't include intercept, so we add a new column named intercept in the independent variable. The code is as following:
 
@@ -292,7 +292,7 @@ print(classification_report(y, pred))
 ```{r fig_8, echo=FALSE, out.width = "500px",fig.cap = "classification report", fig.align = 'center'}
 knitr::include_graphics("./fig_py/fig4.png")
 ```
-#### ROC Curve
+#### Reciever Operating Characteristic (ROC) Curve
 
 When the prediction effect is good, the ROC curve is convex to the apex of the upper left corner. The diagonal line in the translation is tangent to the ROC curve to obtain a point where the TPR is large and the FPR is small. The better the model effect, the farther away the ROC curve is from the diagonal. In the extreme case, the ROC curve passes through the (0,1) point, that is, the positive example is all positive and the negative example is all negative. Under the ROC curve The area can quantitatively evaluate the effect of the model, which is recorded as AUC. The larger the AUC, the better the model effect.
 
