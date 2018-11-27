@@ -375,7 +375,7 @@ summarize
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("data_summ1.png") 
+include_graphics("./fig_stata/data_summ1.png") 
 ```
 
 We see from the summary that the data for `bmi`, `diastolic`, `glucose`, and 
@@ -390,7 +390,7 @@ summarize
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("data_summ2.png") 
+include_graphics("./fig_stata/data_summ2.png") 
 ```
 
 
@@ -411,7 +411,7 @@ logit test pregnant glucose diastolic triceps insulin bmi diabetes age
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("logit_full.png") 
+include_graphics("./fig_stata/logit_full.png") 
 ```
 
 
@@ -427,7 +427,7 @@ estat ic
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("bic_full.png") 
+include_graphics("./fig_stata/bic_full.png") 
 ```
 
 To determine the order at which to drop the variables, we can use Stata's `stepwise`
@@ -438,7 +438,7 @@ stepwise, pr(0.05): logit test pregnant glucose diastolic triceps insulin bmi di
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("stepwise.png") 
+include_graphics("./fig_stata/stepwise.png") 
 ```
   
 From this, we get the dropping order `diastolic`, `insulin`, `triceps`, `pregnant`.
@@ -452,7 +452,7 @@ estat ic
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("bic_model1.png") 
+include_graphics("./fig_stata/bic_model1.png") 
 ```
 
 From this, we get a BIC of 391.8057, an improvement from the full model. 
@@ -466,7 +466,7 @@ estat ic
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("bic_model2.png") 
+include_graphics("./fig_stata/bic_model2.png") 
 ```
 
 Our BIC is now 386.223. Dropping the variable `triceps`, we get another
@@ -479,7 +479,7 @@ estat ic
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("bic_model3.png") 
+include_graphics("./fig_stata/bic_model3.png") 
 ```
 
 This gives us a BIC of 380.7127, still an improvement from the previous.
@@ -494,8 +494,8 @@ estat ic
 
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("logit_final.png") 
-include_graphics("bic_model4.png") 
+include_graphics("./fig_stata/logit_final.png") 
+include_graphics("./fig_stata/bic_model4.png") 
 ```
 
 We see that all variables are now signifcant and we get a minimized BIC of 
@@ -536,7 +536,7 @@ estat gof, group(10) table
      
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("hl2.png") 
+include_graphics("./fig_stata/hl2.png") 
 ```
   
 Since the p-value is greater than $\alpha = 0.05$, we fail to reject the null hypothesis
@@ -553,7 +553,7 @@ estat classification
   
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("class.png") 
+include_graphics("./fig_stata/class.png") 
 ```
 
 The results show 79.59% correctly classified observations.
@@ -569,12 +569,12 @@ lroc, title("Receiving Operator Characteristic Curve") xtitle("False Positive Ra
 
 ```{r, out.width = "60%", fig.cap = "ROC Curve", echo=FALSE}
 library(knitr)
-include_graphics("roc_curve.png") 
+include_graphics("./fig_stata/roc_curve.png") 
 ```
   
 ```{r, out.width = "60%", echo=FALSE}
 library(knitr)
-include_graphics("roc_auc.png") 
+include_graphics("./fig_stata/roc_auc.png") 
 ```
 
 We get an area under the ROC curve of 0.8605, which is close to 1.00, indicative of
