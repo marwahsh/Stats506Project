@@ -6,12 +6,22 @@ output:
    html_document:
      toc: true
 ---
-The goal of this tutorial is to demostrate the use of Logistic Regression, and model diagnostics for this type of regression. We will start this tutorial by explaining the algorithm and the modeling behind Logistic regression. This would be followed by an illustrative example using three statistical software languages: Python, R, and STATA.
+The goal of this tutorial is to demostrate the use of Logistic Regression, and model 
+diagnostics for this type of regression. We will start this tutorial by explaining 
+the algorithm and the modeling behind Logistic regression. This would be followed by 
+an illustrative example using three statistical software languages: Python, R, and STATA.
 
 ###Algorithm
-Logistic regression is a predictive modelling algorithm that is used when the response variable is binary categorical variable, i.e. it can only take two values: 0 and 1. 
+Logistic regression is a predictive modelling algorithm that is used when the response 
+variable is binary categorical variable, i.e. it can only take two values: 0 and 1. 
 
 ###Data Summary
+In this tutorial, we work on the `pima` dataset from `faraway v1.0.7` in R, 
+which has 9 variables. The data comes from a National Institute of Diabetes and 
+Digestive and Kidney Diseases study on 768 adult female Pima Indians living near Phoenix.
+Different measurements of the subjects were taken and it was recorded whether or not
+the patient showed signs of diabetes. More information on the data can be found
+[here](https://www.rdocumentation.org/packages/faraway/versions/1.0.7/topics/pima).
 
 ##Languages {.tabset}
 
