@@ -130,3 +130,239 @@ UCLA Institute for Digital Research and Education website: https://stats.idre.uc
 
 
 ###STATA
+
+For Stata, all functions for the tests in this tutorials are built-in, 
+so there is no need to install or load any additional packages prior
+to performing the analysis in this tutorial. 
+
+**Loading Dataset and Numerical Summaries**
+
+The data set was exported from R into a comma-separated variable file 
+`pima.csv`. We can import and summarize the pima dataset from a CSV 
+file using the following:
+
+```
+import delimited using pima.txt, clear
+summarize
+```
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("data_summ1.png") 
+```
+
+We see from the summary that the data for `bmi`, `diastolic`, `glucose`, and 
+`triceps` contain 0 values, which are not possible measures of these
+parameters. We must therefore clear rows with these values from our dataset.
+We can do this as follows:
+
+```
+drop if glucose == 0 | diastolic == 0 | triceps ==0 | insulin == 0 | bmi == 0
+summarize 
+``` 
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("data_summ2.png") 
+```
+
+
+We can see that we now have 392 observations from the initial 768, and
+all values are now within reasonable range. 
+
+**Model Selection using the Backward Elimination method**  
+
+For this model, our response variable is `test` which indicates whether
+or not a patient tested positive for diabetes. Note that the rest of the 
+variables are numeric and continuous, so we can use them as-is in our
+regression model. Using all other variables as independent variables,
+we can generate the full model using this code:
+
+```
+logit test pregnant glucose diastolic triceps insulin bmi diabetes age
+```
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("logit_full.png") 
+```
+
+
+We now want to determine the best fit model for the given data. Starting with the
+full model, we use backward elimination to drop variables one-by-one and the
+Bayesian Information Criterion (BIC) to determine if the model is an improvement
+from the previous model. 
+  
+We first get the BIC of the model using the following command: 
+```
+estat ic
+```
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("bic_full.png") 
+```
+
+To determine the order at which to drop the variables, we can use Stata's `stepwise`
+function using a 95% confidence level. 
+```
+stepwise, pr(0.05): logit test pregnant glucose diastolic triceps insulin bmi diabetes age
+```
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("stepwise.png") 
+```
+  
+From this, we get the dropping order `diastolic`, `insulin`, `triceps`, `pregnant`.
+
+First, we drop `diastolic`:
+```
+// Model 1 (drop diastolic):
+quietly logit test pregnant glucose triceps insulin bmi diabetes age
+estat ic
+```
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("bic_model1.png") 
+```
+
+From this, we get a BIC of 391.8057, an improvement from the full model. 
+We then drop `insulin`:
+
+```
+// Model 2 (drop insulin):
+quietly logit test pregnant glucose triceps bmi diabetes age
+estat ic
+```
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("bic_model2.png") 
+```
+
+Our BIC is now 386.223. Dropping the variable `triceps`, we get another
+model iteration:
+```
+// Model 3 (drop triceps): 
+quietly logit test pregnant glucose bmi diabetes age
+estat ic
+```
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("bic_model3.png") 
+```
+
+This gives us a BIC of 380.7127, still an improvement from the previous.
+Lastly, dropping `pregnant`, we use the following code and get the
+model summary:
+
+```
+// Model 4 (drop pregnant): 
+logit test glucose bmi diabetes age
+estat ic
+```
+
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("logit_final.png") 
+include_graphics("bic_model4.png") 
+```
+
+We see that all variables are now signifcant and we get a minimized BIC of 
+377.0913 for this model. 
+
+Now that we have a final model, we can create a new column `p` which contains
+the fitted values of our model using the following command:
+
+``` 
+predict p
+```
+
+**Goodness of Fit**  
+
+*Hosmer-Lemeshow Test* 
+
+
+The Hosmer-Lemeshow Test is a goodness-of-fit test for logistic regression 
+models. It maps the expected probabilities against the actual observations by 
+subgroups of the model population. The null hypothesis for the test  is that 
+the observed and expected proportions are the same across all doses. The 
+alternative hypothesis is that the observed and expected proportions are not 
+the same.
+
+The Hosmer-Lemeshow statistic is given by:
+
+$$
+H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}
+$$
+Where $O_{1g}$, $E_{1g}$, $N_g$, and $\pi_g$ denote the observed Y=1 events, expected Y=1 events, total observations, predicted risk for the $g$th risk decile group, and $G$ is the number of groups. We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 2$ degrees of freedom to calculate for the p-value of the test.
+
+We group the data into deciles and perform the Hosmer-Lemeshow Test using the following code:
+
+```
+estat gof, group(10) table
+```
+   
+     
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("hl2.png") 
+```
+  
+Since the p-value is greater than $\alpha = 0.05$, we fail to reject the null hypothesis
+that the observed and expected proportions are the same across all groups. We can conclude that the observed and expected proportions are equal, meaning that the model 
+selected is a good fit. 
+
+**Confusion Matrix**
+
+To determine the accuracy of our model, we can generate a classification report
+using the following command:
+```
+estat classification
+```
+  
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("class.png") 
+```
+
+The results show 79.59% correctly classified observations.
+
+**Reciever Operating Characteristic (ROC) Curve**
+
+These results, specifically the False Positive Rate and True Positive Rate
+can be plotted on a Receiving Operator Characteristic (ROC) Curve using 
+the following command:
+```
+lroc, title("Receiving Operator Characteristic Curve") xtitle("False Positive Rate") ytitle("True Positive Rate")
+```
+
+```{r, out.width = "60%", fig.cap = "ROC Curve", echo=FALSE}
+library(knitr)
+include_graphics("roc_curve.png") 
+```
+  
+```{r, out.width = "60%", echo=FALSE}
+library(knitr)
+include_graphics("roc_auc.png") 
+```
+
+We get an area under the ROC curve of 0.8605, which is close to 1.00, indicative of
+good model accuracy.
+
+**Summary**
+
+In this tutorial we illustrated how to implement logistic regression, select a model
+and conduct model diagnostics. 
+
+**References**
+
+- https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve
+- https://www.sealedenvelope.com/stata/hl/
+- https://en.wikipedia.org/wiki/Hosmer%E2%80%93Lemeshow_test
+
+  
+  
