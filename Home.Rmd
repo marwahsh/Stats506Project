@@ -23,7 +23,7 @@ the patient showed signs of diabetes.
 
 ### R
 
-In order to run this analysis in R, we need to install two key packages: "Faraway" and "ResourceSelection" The former is required to access the data used in this illustration and the latter is used to run the model diagnostics. Once installed with the command, install.packages(“packagename”), they can be loaded using library( ).
+In order to run this analysis in R, we need to install two key packages: "Faraway" and "ResourceSelection" The former is required to access the data used in this illustration and the latter is used to run the model diagnostics. Once installed with the command, install.packages("packagename"), they can be loaded using library( ).
 
 #### Loading Dataframe and Numerical Summaries
 
