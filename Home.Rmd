@@ -167,7 +167,7 @@ y=data['test']
 X=data.drop(['test'], axis=1)
 ```
 
-#### Inplement of Logistic Model
+#### Implement of Logistic Model
 
 ```{r eval=FALSE}
 logit_model=sm.Logit(y,X)
