@@ -1,0 +1,7 @@
+Group 5 To-do List
+
+- Complete the Algorithm and Data Summary sections in the Introduction
+- R language: Complete the summary section
+- Improve consistency of tutorials
+- Look deeper into difference in HL and ROC output
+- Other formatting improvements
