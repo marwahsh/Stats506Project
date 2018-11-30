@@ -90,7 +90,7 @@ legend(.6, .2, auc, title = "Area under the Curve", cex = .75)
 
 
 ###Summary
-In this tutorial we illustrated how to implement logistic regression and conduct model diagnostics. 
+In this tutorial we illustrated how to implement logistic regression and conduct model diagnostics. We used the "pima" dataset to study how the diabetes detection indicator is associated to variables, such as: age, bmi, glucose and the Diabetes pedigree score of women belonging to a Native Indian tribe. We used the Backward Elimination method to decide on the model specification for the logistic regression model. In order to assess the fit of our model we employed techniques such the Hosmer-Lemeshow Test and the ROC Curve, which led us to the conclusion that our model specification is a good fit for these data and hence our findings are meaningful.
 
 ###References
 Hosmer, D. & Lemeshow, S. (2000). Applied Logistic Regression (Second Edition). New York: John Wiley & Sons, Inc.
