@@ -47,19 +47,19 @@ summary(pima_clean)
 
 We use the Backward elimination method to select the model specification, with the BIC as a guide. Please note that a lower BIC indicates improved fit of the model. So, we will be focusing on the individual p-values for the variables and the BIC for the model. 
 
-We start with a logistic model with "test" as the response variable and all the other variables as explanatory. 
+We start with a logistic model with "test" as the response variable and all the other variables as explanatory. The variable test is binary i.e. takes the value 0 and 1. We term a positive diatebetes detection as a "success" (test = 1) and the negative detection as a "failure" (test = 0).
 ```{r logisticmodel}
 Fit = glm(test~ ., family = binomial(link="logit"), data = pima_clean)
 summary(Fit)
 BIC(Fit)
 ```
-The stepwise elimination of variables that are individually statistically insignificant and improve the BIC, results in the final model specification with four idependent variables: age, bmi, glucose, and diabetes.
+The stepwise elimination of variables that are individually statistically insignificant and using the BIC criterion, results in the final model specification with four independent variables: age, bmi, glucose, and diabetes.
 ```{r finalmodel}
 Fit_final = glm(test~ glucose+bmi+diabetes+age, family = binomial(link="logit"), data = pima_clean)
 summary(Fit_final)
 BIC(Fit_final)
 ```
-The estimated coefficients indicate the change in the log odds of the response when the predictors change by one unit. For example, the log odds of testing positive for diabetes increases by 0.053 when age increases by one unit.In addition, we can obtain the confidence intervals for the coefficient estimates as given below (Note, that these confidence intervals are based on the standard errors and rely on the normality assumption).
+The estimated coefficients indicate the change in the log odds of the response when the predictors change by one unit. For example, the log odds of testing positive for diabetes increases by 0.053 when age increases by one unit. In addition, we can obtain the confidence intervals for the coefficient estimates as given below (Note, that these confidence intervals are based on the standard errors and rely on the normality assumption).
 ```{r message = FALSE}
 #computing confidence intervals:
 confint(Fit_final)
@@ -67,7 +67,7 @@ confint(Fit_final)
 
 #### Hosmer-Lemeshow Goodness of Fit Test
 
-We apply the Hosmer-Lemeshow test to assess the fit of the model. We check the null hypothesis that the specified logistic regression model is the correct model. Since the p-value is high, we fail to reject the null hypothesis.
+We apply the Hosmer-Lemeshow test to assess the fit of the model. Essentially, we are testing the null hypothesis that the specified logistic regression model is the correct model. Since the p-value is high, we fail to reject the null hypothesis.
 ```{r message = FALSE}
 library(ResourceSelection)
 h1 = hoslem.test(Fit_final$y, fitted(Fit_final), g = 10)
@@ -85,7 +85,7 @@ h2
 
 #### Confusion Matrix
 
-This provides us with another tool to evaluate the model. It gives us a measure of the Type 1 and Type 2 error in our modeling. Thus the diagonal gives the count of the instances when our model predicts correctly. Inspecting the Confusion matrix for our data we deduce that the overall predicted accurancy for our model is around 80 percent. 
+This provides us with another tool to evaluate the model. It gives us a measure of the Type 1 and Type 2 error in our modeling. The diagonal gives the count of the instances when our model predicts correctly. Inspecting the Confusion matrix for our model we deduce that the overall predicted accurancy for our model is around 80 percent. 
 ```{r CM}
 p = predict(Fit_final, pima_clean, type = "response")
 Con_table = table(p > 0.5, pima_clean$test)
@@ -94,7 +94,7 @@ Con_table
 
 #### Reciever Operating Characteristic (ROC) Curve
 
-Finally, we inspect the ROC curve. This curve plots the the false positive rate against the true probablistic prediction for a range of threshold probabilities. The area under the curve is viewed as a measure of prediction accuracy. The larger the area under the curve, and hence the farther away the ROC curve is from the diagonal, the better the model performance. Computing the area under the curve (AUC) allows us to quantitatively evaluate the model, performance. This could serve as a useful tool for model comparision as well.
+Finally, we inspect the ROC curve. This curve plots the false positive rate against the true probablistic prediction for a range of threshold probabilities. The area under the curve is viewed as a measure of prediction accuracy. The larger the area under the curve, and hence the farther away the ROC curve is from the diagonal, the better the model performance. Computing the area under the curve (AUC) allows us to quantitatively evaluate the model performance. This could serve as a useful tool for model comparision as well.
 
 
 ```{r roc, message = FALSE}
@@ -114,8 +114,7 @@ legend(.6, .2, auc, title = "Area under the Curve", cex = .75)
 
 
 #### Summary
-
-In this tutorial we illustrated how to implement logistic regression and conduct model diagnostics. 
+In this tutorial we illustrated how to implement logistic regression and conduct model diagnostics. We used the "pima" dataset to study how the diabetes detection indicator is associated to variables, such as: age, bmi, glucose and the Diabetes pedigree score of women belonging to a Native Indian tribe. We used the Backward Elimination method to decide on the model specification for the logistic regression model. In order to assess the fit of our model we employed techniques such the Hosmer-Lemeshow Test and the ROC Curve, which led us to the conclusion that our model specification is a good fit for these data and hence our findings are meaningful.
 
 #### References
 
