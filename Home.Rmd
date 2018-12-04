@@ -152,6 +152,18 @@ data=pd.read_csv("pima.txt",
 data['intercept'] = 1.0
 ```
 
+Once the dataframe “pima” is loaded, we can view the summaries of the variables by using the function in python, $data.describe()$.
+
+```{r eval=FALSE}
+pd.set_option('display.max_columns', None)
+describe = data.describe()
+print(describe)
+```
+
+```{r fig_summary2, echo=FALSE, out.width = "500px", fig.cap = "data summary before data cleaning", fig.align = 'center'}
+knitr::include_graphics("./fig_py/summary_before.png")
+```
+
 Then we clean the rows whose $bmi$, $diastolic$, $glucose$, $triceps$ and $insulin$ equals 0 with following code:
 ```{r eval=FALSE}
 ## Data Cleaning
@@ -164,7 +176,20 @@ y=data['test']
 X=data.drop(['test'], axis=1)
 ```
 
-#### Implement of Logistic Model
+After do the data cleaning, we have the result as following:
+
+```{r eval=FALSE}
+describe = data.describe()
+print(describe)
+```
+
+```{r fig_summary1, echo=FALSE, out.width = "500px", fig.cap = "data summary before data cleaning", fig.align = 'center'}
+knitr::include_graphics("./fig_py/summary.png")
+```
+
+#### Model Selection Using the Backward Elimination method
+
+We first use a logistic model with “test” as the response variable and all the other variables as explanatory.
 
 ```{r eval=FALSE}
 logit_model=sm.Logit(y,X)
@@ -180,7 +205,6 @@ In the output above, we can gain the estimated coefficients, standard error, con
 
 $$ log \frac{p}{1-p} =-10.04+ 0.082\times pregnant+ 0.038 \times glucose  -0.001 \times diastolic +0.011 \times triceps -0.0008 \times insulin +  0.071 \times bmi+ 1.141  \times diabetes +0.034 \times age $$
 
-#### Backward Stepwise with BIC
 
 Backward stepwise with BIC criterion, which involves starting with all candidate variables, testing the deletion of each variable using a chosen model fit criterion, deleting the variable (if any) whose loss gives the most BIC deterioration of the model fit, and repeating this process until no further variables can be deleted without a BIC loss of fit.
 
@@ -266,6 +290,59 @@ print('Accuracy of logistic regression classifier on test set: {:.2f}'.format(te
 knitr::include_graphics("./fig_py/fig3.png")
 ```
 
+
+#### Goodness of Fit 
+##### Hosmer-Lemeshow Test
+
+The Hosmer-Lemeshow Test is a goodness-of-fit test for logistic regression 
+models. It maps the expected probabilities against the actual observations by 
+subgroups of the model population. The null hypothesis for the test  is that 
+the observed and expected proportions are the same across all doses. The 
+alternative hypothesis is that the observed and expected proportions are not 
+the same.
+
+The Hosmer-Lemeshow statistic is given by:
+
+$$
+H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}
+$$
+Where $O_{1g}$, $E_{1g}$, $N_g$, and $\pi_g$ denote the observed Y=1 events, expected Y=1 events, total observations, predicted risk for the $g$th risk decile group, and $G$ is the number of groups. We then compare this test statistic to the $\chi ^{2}$ distribution with $G-2$ degrees of freedom to calculate for the p-value of the test.
+
+```{r eval=FALSE}
+# Hoslem-Lemeshow Test
+y_prob = pd.DataFrame(y_prob)
+y_prob1 = pd.concat([y_prob, y], axis =1)
+y_prob1['decile'] = pd.qcut(y_prob1[0], 10)
+obsevents_pos = y_prob1['test'].groupby(y_prob1.decile).sum()
+obsevents_neg = y_prob1[0].groupby(y_prob1.decile).count() - obsevents_pos
+expevents_pos = y_prob1[0].groupby(y_prob1.decile).sum()
+expevents_neg = y_prob1[0].groupby(y_prob1.decile).count() - expevents_pos
+hl = ((obsevents_neg - expevents_neg)**2/expevents_neg).sum()+((obsevents_pos - expevents_pos)**2/expevents_pos).sum()
+print('chi-square: {:.2f}'.format(hl))
+## df = group-2
+pvalue=1-chi2.cdf(hl,8)
+print('p-value: {:.2f}'.format(pvalue))
+obsevents_pos = pd.DataFrame(obsevents_pos)
+obsevents_neg = pd.DataFrame(obsevents_neg)
+expevents_pos = pd.DataFrame(expevents_pos)
+expevents_neg = pd.DataFrame(expevents_neg)
+final = pd.concat([obsevents_pos, obsevents_neg, expevents_pos, expevents_neg], axis =1)
+final.columns=['obs_pos','obs_neg','exp_pos', 'exp_neg']
+print(final)
+```
+
+The observed number of successes and failures in each interval are obtained by counting the subjects in that interval. The expected number of successes in an interval is the sum of the probability of success for the subjects in that interval.
+
+```{r fig_10, echo=FALSE, out.width = "500px",fig.cap = "Table of observed and expected counts", fig.align = 'center'}
+knitr::include_graphics("./fig_py/fig10.png")
+```
+
+The Hosmer-Lemeshow statistic is calculated from above table and we final calculate p-value as following:
+
+```{r fig_11, echo=FALSE, out.width = "150px",fig.align = 'center'}
+knitr::include_graphics("./fig_py/fig7.png")
+```
+
 #### Confusion Matrix
 
 ```{r eval=FALSE}
@@ -314,44 +391,14 @@ plt.show()
 knitr::include_graphics("./fig_py/Log_ROC.png")
 ```
 
-#### Hosmer-Lemeshow Goodness of Fit Test
+#### Summary
+In this tutorial we illustrated how to implement logistic regression, select a model
+and conduct model diagnostics in python. 
 
-The Hosmer-Lemeshow test is a statistical test for goodness of fit for logistic regression models. It is used frequently in risk prediction models. The test assesses whether or not the observed event rates match expected event rates in subgroups of the model population. The Hosmer-Lemeshow test specifically identifies subgroups as the deciles of fitted risk values.
-
-```{r eval=FALSE}
-# Hoslem-Lemeshow Test
-y_prob = pd.DataFrame(y_prob)
-y_prob1 = pd.concat([y_prob, y], axis =1)
-y_prob1['decile'] = pd.qcut(y_prob1[0], 10)
-obsevents_pos = y_prob1['test'].groupby(y_prob1.decile).sum()
-obsevents_neg = y_prob1[0].groupby(y_prob1.decile).count() - obsevents_pos
-expevents_pos = y_prob1[0].groupby(y_prob1.decile).sum()
-expevents_neg = y_prob1[0].groupby(y_prob1.decile).count() - expevents_pos
-hl = ((obsevents_neg - expevents_neg)**2/expevents_neg).sum()+((obsevents_pos - expevents_pos)**2/expevents_pos).sum()
-print('chi-square: {:.2f}'.format(hl))
-## df = group-2
-pvalue=1-chi2.cdf(hl,8)
-print('p-value: {:.2f}'.format(pvalue))
-obsevents_pos = pd.DataFrame(obsevents_pos)
-obsevents_neg = pd.DataFrame(obsevents_neg)
-expevents_pos = pd.DataFrame(expevents_pos)
-expevents_neg = pd.DataFrame(expevents_neg)
-final = pd.concat([obsevents_pos, obsevents_neg, expevents_pos, expevents_neg], axis =1)
-final.columns=['obs_pos','obs_neg','exp_pos', 'exp_neg']
-print(final)
-```
-
-The observed number of successes and failures in each interval are obtained by counting the subjects in that interval. The expected number of successes in an interval is the sum of the probability of success for the subjects in that interval.
-
-```{r fig_10, echo=FALSE, out.width = "500px",fig.cap = "Table of observed and expected counts", fig.align = 'center'}
-knitr::include_graphics("./fig_py/fig10.png")
-```
-
-The Hosmer-Lemeshow statistic is calculated from above table and we final calculate p-value as following:
-
-```{r fig_11, echo=FALSE, out.width = "150px",fig.align = 'center'}
-knitr::include_graphics("./fig_py/fig7.png")
-```
+#### References
+- https://towardsdatascience.com/building-a-logistic-regression-in-python-step-by-step-becd4d56c9c8
+- https://www.data-essential.com/hosman-lemeshow-in-python/
+- https://en.wikipedia.org/wiki/Logistic_regression 
 
 
 ### STATA
