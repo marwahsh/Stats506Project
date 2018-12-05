@@ -104,7 +104,7 @@ library(ROCR)
 p = predict(Fit_final, pima_clean, type = "response")
 pred = prediction(p, pima_clean$test)
 roc = performance(pred, "tpr", "fpr")
-plot(roc,
+plot(roc, col = 'red',
      main = "ROC Curve")
 abline(a=0, b=1)
 #Higher area under the curve the better the fit (AUC)
