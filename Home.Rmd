@@ -9,7 +9,13 @@ output:
 The goal of this tutorial is to demostrate the use of Logistic Regression, and model diagnostics for this type of regression. We will start this tutorial by explaining the algorithm and the modeling behind Logistic regression. This would be followed by an illustrative example using three statistical software languages: Python, R, and STATA.
 
 ## Algorithm
-Logistic regression is a predictive modelling algorithm that is used when the response variable is binary categorical variable, i.e. it can only take two values: 0 and 1. 
+Logistic regression is a predictive modelling algorithm that is used when the response variable $y$ is binary categorical variable, i.e. $y$ can only take two values: 0 and 1. It is defined by the probability mass function:
+$$P(y_i=1|x_i=x) = \frac{exp(\beta'x)}{1+exp(\beta'x)}$$
+which implys that 
+$$P(y_i=0|x_i=x) = \frac{1}{1+exp(\beta'x)}$$
+
+In logistic regression, the logit function is $logit(x) = log \frac{x}{1-x}$ and expit function is the inverse of logit function, $expit(x) = \frac{exp(x)}{1+exp(x)}$. Logit function maps unit interval onto real line and expit function do the inverse job. Here, in logistic regression, the logit function maps $\beta'x$ to a probablity. As a result, the linear predictor $\beta'x$ can be interpreted in logistic regression as the conditional log odds: 
+$$log \frac{P(y_i=1|x_i=x)}{P(y_i=0|x_i=x)} = \beta'x$$
 
 ## Data Summary
 
@@ -127,34 +133,35 @@ UCLA Institute for Digital Research and Education website: https://stats.idre.uc
 This page uses the following packages in python. Please make sure that you can load them before trying to run the examples on this page.
 
 ```{r eval=FALSE}
-import pandas as pd
-import matplotlib.pyplot as plt 
+import pandas as pd                                ## data analysis package
+import matplotlib.pyplot as plt                    ## plot package
 import warnings
-warnings.filterwarnings("ignore")
-import statsmodels.formula.api as smf
-import statsmodels.api as sm
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix
+warnings.filterwarnings("ignore")                
+import statsmodels.formula.api as smf             
+import statsmodels.api as sm                       ## statistical model package
+from sklearn.metrics import confusion_matrix       ## logistic regression report packages
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 from sklearn.metrics import classification_report
-from scipy.stats import chi2
+from scipy.stats import chi2                       ## chi-square 
 ```
 
 #### Loading Dataframe and Numerical Summaries
 
-In this tutorial, we use pima data as our datasets. In order to fit package in python. We first divide our model into dependent variable and independent variables. Besides, since all independent variables here are numeric, we do not need to change them into factor. However, when utilizing $sm.Logit()$ in python, it doesn't include intercept, so we add a new column named intercept in the independent variable. The code is as following:
+In this tutorial, we use pima data as our datasets. In order to fit package in python. We first divide our model into dependent variable and independent variables. Besides, since all independent variables here are numeric, we do not need to change them into factor. However, when utilizing `sm.Logit()` in python, it doesn't include intercept, so we add a new column named intercept in the independent variable. The code is as following:
 
 ```{r eval=FALSE}
+## Load data
 data=pd.read_csv("pima.txt",
    delim_whitespace=True,
    skipinitialspace=True)
 data['intercept'] = 1.0
 ```
 
-Once the dataframe “pima” is loaded, we can view the summaries of the variables by using the function in python, $data.describe()$.
+Once the dataframe `pima` is loaded, we can view the summaries of the variables by using the function in python, $data.describe()$.
 
 ```{r eval=FALSE}
+## Summary of data
 pd.set_option('display.max_columns', None)
 describe = data.describe()
 print(describe)
@@ -164,7 +171,7 @@ print(describe)
 knitr::include_graphics("./fig_py/summary_before.png")
 ```
 
-Then we clean the rows whose $bmi$, $diastolic$, $glucose$, $triceps$ and $insulin$ equals 0 with following code:
+Then we clean the rows whose `bmi`, `diastolic`, `glucose`, `triceps` and `insulin` equals 0 with following code:
 ```{r eval=FALSE}
 ## Data Cleaning
 data = data[data['bmi']>0]
@@ -179,6 +186,7 @@ X=data.drop(['test'], axis=1)
 After do the data cleaning, we have the result as following:
 
 ```{r eval=FALSE}
+## Summary of data after data cleaning
 describe = data.describe()
 print(describe)
 ```
@@ -189,9 +197,10 @@ knitr::include_graphics("./fig_py/summary.png")
 
 #### Model Selection Using the Backward Elimination method
 
-We first use a logistic model with “test” as the response variable and all the other variables as explanatory.
+We first use a logistic model with `test` as the response variable and all the other variables as explanatory.
 
 ```{r eval=FALSE}
+## Logistic regression
 logit_model=sm.Logit(y,X)
 result=logit_model.fit()
 print(result.summary2())
@@ -201,7 +210,7 @@ print(result.summary2())
 knitr::include_graphics("./fig_py/fit1.png")
 ```
 
-In the output above, we can gain the estimated coefficients, standard error, confidence interval of coefficients, z-value (Wald z-statistic) and its corresponding p-values. Here, we can find that variable $pregnant$, $glucose$, $bmi$, $diabetes$, $intercept$ are all statistically significant, while $triceps$, $insulin$, $age$, $diastolic$ are not. The result above can be interpreted as following:
+In the output above, we can gain the estimated coefficients, standard error, confidence interval of coefficients, z-value (Wald z-statistic) and its corresponding p-values. Here, we can find that variable `pregnant`, `glucose`, `bmi`, `diabete`, `intercept` are all statistically significant, while `triceps`, `insulin`, `age`, `diastolic` are not. The result above can be interpreted as following:
 
 $$ log \frac{p}{1-p} =-10.04+ 0.082\times pregnant+ 0.038 \times glucose  -0.001 \times diastolic +0.011 \times triceps -0.0008 \times insulin +  0.071 \times bmi+ 1.141  \times diabetes +0.034 \times age $$
 
@@ -223,7 +232,7 @@ print(result1.bic)
 knitr::include_graphics("./fig_py/fit2bic.png")
 ```
 
-The BIC of original model is 398, after deleting $triceps$, BIC declines to 392. We follow the same step and delete $diastolic$ and have the result as following:
+The BIC of original model is 398, after deleting `triceps`, BIC declines to 392. We follow the same step and delete `diastolic` and have the result as following:
 
 ```{r eval=FALSE}
 # Drop diastolic (individually statistically insignificant) and assess the model
@@ -236,7 +245,7 @@ print(result2.bic)
 ```{r fig_3, echo=FALSE, out.width = "350px", fig.cap = "BIC after deleting triceps and diastolic", fig.align = 'center'}
 knitr::include_graphics("./fig_py/fit3bic.png")
 ```
-After deleting $diastolic$, BIC declines to 386. We follow the same step and delete $insulin$ and have the result as following:
+After deleting `diastolic`, BIC declines to 386. We follow the same step and delete `insulin` and have the result as following:
 
 ```{r eval=FALSE}
 # Drop insulin (indiviadually insignificant) and assess the model
@@ -250,7 +259,7 @@ print(result3.bic)
 knitr::include_graphics("./fig_py/fit4bic.png")
 ```
 
-After deleting $insulin$, BIC declines to 381. We now follow the same step and delete $pregnant$ and finally have the model as:
+After deleting `insulin`, BIC declines to 381. We now follow the same step and delete `pregnant` and finally have the model as:
 
 ```{r eval=FALSE}
 # Drop age (indiviadually insignificant) and assess the model
@@ -291,8 +300,8 @@ knitr::include_graphics("./fig_py/fig3.png")
 ```
 
 
-#### Goodness of Fit 
-##### Hosmer-Lemeshow Test
+#### Hosmer-Lemeshow Goodness of Fit Test
+
 
 The Hosmer-Lemeshow Test is a goodness-of-fit test for logistic regression 
 models. It maps the expected probabilities against the actual observations by 
