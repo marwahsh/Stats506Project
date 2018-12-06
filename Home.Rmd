@@ -1,7 +1,7 @@
 ---
 title: "STATS 506 Project: Logistic Regression with Model Diagnostics"
 author: "Group 5: Fang, Marwah, and Santos"
-date: "11/27/2018"
+date: "12/07/2018"
 output: 
    html_document:
      toc: true
