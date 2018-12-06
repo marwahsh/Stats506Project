@@ -17,9 +17,31 @@ $$P(y_i=0|x_i=x) = \frac{1}{1+exp(\beta'x)}$$
 In logistic regression, the logit function is $logit(x) = log \frac{x}{1-x}$ and expit function is the inverse of logit function, $expit(x) = \frac{exp(x)}{1+exp(x)}$. Logit function maps unit interval onto real line and expit function does the inverse job. Here, in logistic regression, the logit function maps $\beta'x$ to a probablity. As a result, the linear predictor $\beta'x$ can be interpreted in logistic regression as the conditional log odds: 
 $$log \frac{P(y_i=1|x_i=x)}{P(y_i=0|x_i=x)} = \beta'x$$
 
+### Model Selection with Backwards Elimination and the Bayesian Information Criterion
+
+
+### Performance Measurement with the Receiver Operating Characteristic (ROC) Curve
+
+
+### Goodness of Fit Test with the Hosmer-Lemeshow Statistic
+The Hosmer-Lemeshow Test is a goodness-of-fit test used for logistic regression models. It maps the expected probabilities against the actual observations by subgroups of the model population. The null hypothesis for the test is that the expected proportions from the model are the same as those observed across all subgroups. The alternative hypothesis is that the observed and expected proportions are not the same. 
+
+The Hosmer-Lemeshow statistic is given by:
+
+$$
+H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}
+$$
+Where $O_{1g}$, $E_{1g}$, $N_g$, and $\pi_g$ denote the observed Y=1 events, expected Y=1 events, total observations, predicted risk for the $g$th risk decile group, and $G$ is the number of groups. 
+
+We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 2$ degrees of freedom to calculate for the p-value of the test. A high p-value would mean that we would fail to reject the null hypothesis. This means that the model generates fitted values equal 
+to observed values, indicating a good fit. 
+
+
 ## Data Summary
 
 In this tutorial, we work on the `pima` dataset from the package `faraway v1.0.7` in R, which has 9 variables. The data comes from a National Institute of Diabetes and Digestive and Kidney Diseases study on 768 adult female Pima Indians living near Phoenix. Different measurements of the subjects were taken and the following variables were recorded: Number of times pregnant ("pregnant"), Plasma glucose concentration, which is the result of a 2 hours oral glucose tolerance test ("glucose"), Diastolic blood pressure (mm Hg) ("diastolic"), Triceps skin fold thickness (mm) ("triceps"), 2-Hour serum insulin (mu U/ml) ("insulin"), Body mass index (weight in kg/(height in m2)) ("bmi"), Diabetes pedigree function ("diabetes"), Age (years) ("age") and a test whether the patient shows signs of diabetes ("test"), coded 0 if negative, 1 if positive. 
+
+Since this dataset contains a binary categorical variable ("test"), logistic regression can be used to create a predictive model using the rest of the variables as predictors to determine the probability that a person will show positive signs of diabetes. 
 
 ## Languages {.tabset}
 
@@ -45,7 +67,7 @@ pima_clean = filter(pima, diastolic > 0 & bmi > 0) %>% filter(insulin > 0 & gluc
 summary(pima_clean)
 ```
 
-#### Model Selection using the Backward Elimination method
+#### Model Selection using the Backward Elimination Method
 
 We use the Backward elimination method to select the model specification, with the BIC as a guide. Please note that a lower BIC indicates improved fit of the model. So, we will be focusing on the individual p-values for the variables and the BIC for the model. 
 
@@ -113,7 +135,6 @@ auc = unlist(slot(auc, "y.values"))
 auc = round(auc, 2)
 legend(.6, .2, auc, title = "Area under the Curve", cex = .75)
 ```
-
 
 #### Summary
 In this tutorial we illustrated how to implement logistic regression and conduct model diagnostics. We used the "pima" dataset to study how the diabetes detection indicator is associated to variables, such as: age, bmi, glucose and the Diabetes pedigree score of women belonging to a Native Indian tribe. We used the Backward Elimination method to decide on the model specification for the logistic regression model. In order to assess the fit of our model we employed techniques such the Hosmer-Lemeshow Test and the ROC Curve, which led us to the conclusion that our model specification is a good fit for these data and hence our findings are meaningful.
@@ -191,7 +212,7 @@ print(describe)
 knitr::include_graphics("./fig_py/summary.png")
 ```
 
-#### Model Selection Using the Backward Elimination method
+#### Model Selection Using the Backward Elimination Method
 
 We first use a logistic model with `test` as the response variable and all the other variables as explanatory.
 
@@ -294,7 +315,6 @@ print('Accuracy of logistic regression classifier on test set: {:.2f}'.format(te
 ```{r fig_6, echo=FALSE, out.width = "500px", fig.align = 'center'}
 knitr::include_graphics("./fig_py/fig3.png")
 ```
-
 
 #### Hosmer-Lemeshow Goodness of Fit Test
 
@@ -559,21 +579,7 @@ predict p
 ```
 
 #### Hosmer-Lemeshow Goodness of Fit Test
-
-
-The Hosmer-Lemeshow Test is a goodness-of-fit test for logistic regression 
-models. It maps the expected probabilities against the actual observations by 
-subgroups of the model population. The null hypothesis for the test  is that 
-the observed and expected proportions are the same across all doses. The 
-alternative hypothesis is that the observed and expected proportions are not 
-the same.
-
-The Hosmer-Lemeshow statistic is given by:
-
-$$
-H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}
-$$
-Where $O_{1g}$, $E_{1g}$, $N_g$, and $\pi_g$ denote the observed Y=1 events, expected Y=1 events, total observations, predicted risk for the $g$th risk decile group, and $G$ is the number of groups. We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 2$ degrees of freedom to calculate for the p-value of the test.
+We use the Hosmer-Lemeshow test to assess the goodness-of-fit of the model. Our null hypothesis is that the fitted values from the model are the same as what is observed. 
 
 We group the data into deciles and perform the Hosmer-Lemeshow Test using the following code:
 
@@ -636,7 +642,6 @@ and conduct model diagnostics.
 #### References
 
 - https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve
-- https://www.sealedenvelope.com/stata/hl/
 - https://en.wikipedia.org/wiki/Hosmer%E2%80%93Lemeshow_test
 
   
