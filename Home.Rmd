@@ -6,42 +6,37 @@ output:
    html_document:
      toc: true
 ---
-The goal of this tutorial is to demonstrate the use of Logistic Regression, and model diagnostics for this type of regression. We will start this tutorial by explaining the algorithm and the modeling behind Logistic regression. This would be followed by an illustrative example using three statistical software languages: Python, R, and STATA.
 
-## Algorithm
-**Logistic regression** is a predictive modelling algorithm that is used when the response variable $y$ is binary categorical variable, i.e. $y$ can only take two values: 0 and 1. It is defined by the probability mass function:
+## Introduction
+The goal of this tutorial is to demonstrate the use of Logistic Regression, and the model diagnostics for this type of regression. We will start this tutorial by explaining the algorithm and the modeling behind Logistic Regression. This would be followed by an illustrative example using three statistical software languages: Python, R, and STATA.
+
+### Logistic Regression Algorithm
+**Logistic regression** is a predictive modelling algorithm that is used when the response variable $y$ is a binary categorical variable, i.e. $y$ can only take two values: 0 and 1. It is defined by the probability mass function:
 $$P(y_i=1|x_i=x) = \frac{exp(\beta'x)}{1+exp(\beta'x)}$$
-which implys that 
+which implies that 
 $$P(y_i=0|x_i=x) = \frac{1}{1+exp(\beta'x)}$$
 
-In logistic regression, the logit function is $logit(x) = log \frac{x}{1-x}$ and expit function is the inverse of logit function, $expit(x) = \frac{exp(x)}{1+exp(x)}$. Logit function maps unit interval onto real line and expit function does the inverse job. Here, in logistic regression, the logit function maps $\beta'x$ to a probablity. As a result, the linear predictor $\beta'x$ can be interpreted in logistic regression as the conditional log odds: 
+In logistic regression, the logit function is defined as $logit(x) = log \frac{x}{1-x}$ and the expit function, the inverse of logit function, is defined as $expit(x) = \frac{exp(x)}{1+exp(x)}$. The logit function maps unit interval onto real line and the expit function does the inverse. Here, in logistic regression, the logit function maps $\beta'x$ to a probablity. As a result, the linear predictor $\beta'x$ can be interpreted in logistic regression as the conditional log odds: 
 $$log \frac{P(y_i=1|x_i=x)}{P(y_i=0|x_i=x)} = \beta'x$$
 
-**Model Selection with Backwards Elimination and the Bayesian Information Criterion**
+### Data Summary
 
+In this tutorial, we work on the **pima** dataset from the package **faraway v1.0.7** in R, which has 9 variables. The data comes from a National Institute of Diabetes and Digestive and Kidney Diseases study on 768 adult female Pima Indians living near Phoenix. Different measurements of the subjects were taken and the following variables were recorded: Number of times pregnant `pregnant`, Plasma glucose concentration, which is the result of a 2 hours oral glucose tolerance test `glucose`, Diastolic blood pressure (mm Hg) `diastolic`, Triceps skin fold thickness (mm) `triceps`, 2-Hour serum insulin (mu U/ml) `insulin`, Body mass index (weight in kg/(height in m2)) `bmi`, Diabetes pedigree function `diabetes`, Age (years) `age` and a test whether the patient shows signs of diabetes `test`, coded 0 if negative, 1 if positive. 
 
-**Performance Measurement with the Receiver Operating Characteristic (ROC) Curve**
+Since this dataset contains a binary categorical variable `test`, logistic regression can be used to create a predictive model using the rest of the variables as predictors to determine the probability that a person will show positive signs of diabetes. 
 
+### Model Diagnostics
 
-**Goodness of Fit Test with the Hosmer-Lemeshow Statistic**
-The Hosmer-Lemeshow Test is a goodness-of-fit test used for logistic regression models. It maps the expected probabilities against the actual observations by subgroups of the model population. The null hypothesis for the test is that the expected proportions from the model are the same as those observed across all subgroups. The alternative hypothesis is that the observed and expected proportions are not the same. 
+Subsequent to fitting a logistic regression model, we will conduct variable selection using **backwards elimination** and the **Bayesian Information Criterion (BIC)** as the selection criterion to determine the best model for the given data. Backward elimination is appropriate for the given data as we only have a few parameters available. Using BIC prevents overfitting by penalizing adding parameters to the model. The performance of the selected model will then be assessed using the **Receiver Operating Characteristic (ROC) Curve**. 
+
+The **Hosmer-Lemeshow Test** will then be conducted to assess the model's goodness of fit. The test compares the expected probabilities against the actual observations by subgroups of the model population. The null hypothesis for the test is that the expected proportions from the model are the same as those observed across all subgroups. The alternative hypothesis is that the observed and expected proportions are not the same. 
 
 The Hosmer-Lemeshow statistic is given by:
-
-$$
-H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}
-$$
+$$H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}$$
 Where $O_{1g}$, $E_{1g}$, $N_g$, and $\pi_g$ denote the observed Y=1 events, expected Y=1 events, total observations, predicted risk for the $g$th risk decile group, and $G$ is the number of groups. 
 
-We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 2$ degrees of freedom to calculate for the p-value of the test. A high p-value would mean that we would fail to reject the null hypothesis. This means that the model generates fitted values equal 
-to observed values, indicating a good fit. 
+We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 2$ degrees of freedom to calculate for the p-value of the test. A high p-value would mean that the model generates fitted values equal to observed values, indicating a good fit. 
 
-
-## Data Summary
-
-In this tutorial, we work on the `pima` dataset from the package `faraway v1.0.7` in R, which has 9 variables. The data comes from a National Institute of Diabetes and Digestive and Kidney Diseases study on 768 adult female Pima Indians living near Phoenix. Different measurements of the subjects were taken and the following variables were recorded: Number of times pregnant ("pregnant"), Plasma glucose concentration, which is the result of a 2 hours oral glucose tolerance test ("glucose"), Diastolic blood pressure (mm Hg) ("diastolic"), Triceps skin fold thickness (mm) ("triceps"), 2-Hour serum insulin (mu U/ml) ("insulin"), Body mass index (weight in kg/(height in m2)) ("bmi"), Diabetes pedigree function ("diabetes"), Age (years) ("age") and a test whether the patient shows signs of diabetes ("test"), coded 0 if negative, 1 if positive. 
-
-Since this dataset contains a binary categorical variable ("test"), logistic regression can be used to create a predictive model using the rest of the variables as predictors to determine the probability that a person will show positive signs of diabetes. 
 
 ## Languages {.tabset}
 
