@@ -29,11 +29,9 @@ Since this dataset contains a binary categorical variable `test`, logistic regre
 
 Subsequent to fitting a logistic regression model, we will conduct variable selection using **backwards elimination** and the **Bayesian Information Criterion (BIC)** as the selection criterion to determine the best model for the given data. Backward elimination is appropriate for the given data as we only have a few parameters available. Using BIC prevents overfitting by penalizing adding parameters to the model. The performance of the selected model will then be assessed using the **Receiver Operating Characteristic (ROC) Curve**. 
 
-The **Hosmer-Lemeshow Test** will then be conducted to assess the model's goodness of fit. The test compares the expected probabilities against the actual observations by subgroups of the model population. The null hypothesis for the test is that the expected proportions from the model are the same as those observed across all subgroups. The alternative hypothesis is that the observed and expected proportions are not the same. 
-
-The Hosmer-Lemeshow statistic is given by:
+The **Hosmer-Lemeshow Test** will then be conducted to assess the model's goodness of fit. The test compares the expected probabilities against the actual observations by subgroups of the model population. The null hypothesis for the test is that the expected proportions from the model are the same as those observed across all subgroups. The alternative hypothesis is that the observed and expected proportions are not the same. The Hosmer-Lemeshow statistic is given by:
 $$H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}$$
-Where $O_{1g}$, $E_{1g}$, $N_g$, and $\pi_g$ denote the observed Y=1 events, expected Y=1 events, total observations, predicted risk for the $g$th risk decile group, and $G$ is the number of groups. 
+Where $O_{1g}$ and  $E_{1g}$ are the observed and expected Y=1 events, respectively; $N_g$ is the total number of observations; $\pi_g$ is the predicted risk for the $g$th risk decile group; and $G$ is the number of groups. 
 
 We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 2$ degrees of freedom to calculate for the p-value of the test. A high p-value would mean that the model generates fitted values equal to observed values, indicating a good fit. 
 
@@ -44,7 +42,7 @@ We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 
 
 In order to run this analysis in R, we need to install two key packages: "Faraway" and "ResourceSelection" The former is required to access the data used in this illustration and the latter is used to run the model diagnostics. Once installed with the command, install.packages("packagename"), they can be loaded using library( ).
 
-#### Loading Dataframe and Numerical Summaries
+#### Loading Dataset and Numerical Summaries
 
 Once the dataframe "pima" is loaded, we can view the summaries of the variables by using the function, summary.
 
@@ -288,7 +286,7 @@ knitr::include_graphics("./fig_py/fit5.png")
 We can find that the final model only contain 4 variables and intercept. All of them are statistically significant. The result above can be interpreted as following:
 $$log \frac{p}{1-p} =-10.092+ 0.036 \times glucose+  0.074 \times bmi+ 1.087 \times diabetes +0.053 \times age$$
 
-#### Model Fitting
+##### *Model Fitting*
 
 In this part, we fit model with the model we derived in the last part. 
 
@@ -314,19 +312,7 @@ knitr::include_graphics("./fig_py/fig3.png")
 #### Hosmer-Lemeshow Goodness of Fit Test
 
 
-The Hosmer-Lemeshow Test is a goodness-of-fit test for logistic regression 
-models. It maps the expected probabilities against the actual observations by 
-subgroups of the model population. The null hypothesis for the test  is that 
-the observed and expected proportions are the same across all doses. The 
-alternative hypothesis is that the observed and expected proportions are not 
-the same.
-
-The Hosmer-Lemeshow statistic is given by:
-
-$$
-H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}
-$$
-Where $O_{1g}$, $E_{1g}$, $N_g$, and $\pi_g$ denote the observed Y=1 events, expected Y=1 events, total observations, predicted risk for the $g$th risk decile group, and $G$ is the number of groups. We then compare this test statistic to the $\chi ^{2}$ distribution with $G-2$ degrees of freedom to calculate for the p-value of the test.
+The Hosmer-Lemeshow Test is a goodness-of-fit test for logistic regression models. We use this to compare the fitted values and observed values from the dataset.
 
 ```{r eval=FALSE}
 # Hoslem-Lemeshow Test
@@ -363,7 +349,9 @@ The Hosmer-Lemeshow statistic is calculated from above table and we final calcul
 knitr::include_graphics("./fig_py/fig7.png")
 ```
 
-#### Confusion Matrix
+Since the p-value is high, we fail to reject the null hypothesis that the expected and observed probabilities are equal. 
+
+#### Confusion Matrix and Classification Report
 
 ```{r eval=FALSE}
 # Confusion matrix
@@ -376,7 +364,6 @@ knitr::include_graphics("./fig_py/fig2.png")
 ```
 The (1,1) entry means real value equals 1 and predict value equals 1. The (1,2) entry means real value equals 1 and predict value equals 0. The (2,1) entry means real value equals 0 and predict value equals 1. The (2,2) entry means real value equals 0 and predict value equals 0. Thus, we have 233+79 correct predictions and 51+29 false predictions.
 
-#### Classification Report
 
 ```{r eval=FALSE}
 # classification report
@@ -592,7 +579,7 @@ Since the p-value is greater than $\alpha = 0.05$, we fail to reject the null hy
 that the observed and expected proportions are the same across all groups. We can conclude that the observed and expected proportions are equal, meaning that the model 
 selected is a good fit. 
 
-#### Confusion Matrix
+#### Confusion Matrix and Classification Report
 
 To determine the accuracy of our model, we can generate a classification report
 using the following command:
