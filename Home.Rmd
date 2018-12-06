@@ -5,12 +5,11 @@ date: "12/07/2018"
 output: 
    html_document:
      toc: true
-     toc_depth: 2
 ---
 The goal of this tutorial is to demonstrate the use of Logistic Regression, and model diagnostics for this type of regression. We will start this tutorial by explaining the algorithm and the modeling behind Logistic regression. This would be followed by an illustrative example using three statistical software languages: Python, R, and STATA.
 
 ## Algorithm
-Logistic regression is a predictive modelling algorithm that is used when the response variable $y$ is binary categorical variable, i.e. $y$ can only take two values: 0 and 1. It is defined by the probability mass function:
+**Logistic regression** is a predictive modelling algorithm that is used when the response variable $y$ is binary categorical variable, i.e. $y$ can only take two values: 0 and 1. It is defined by the probability mass function:
 $$P(y_i=1|x_i=x) = \frac{exp(\beta'x)}{1+exp(\beta'x)}$$
 which implys that 
 $$P(y_i=0|x_i=x) = \frac{1}{1+exp(\beta'x)}$$
@@ -18,13 +17,13 @@ $$P(y_i=0|x_i=x) = \frac{1}{1+exp(\beta'x)}$$
 In logistic regression, the logit function is $logit(x) = log \frac{x}{1-x}$ and expit function is the inverse of logit function, $expit(x) = \frac{exp(x)}{1+exp(x)}$. Logit function maps unit interval onto real line and expit function does the inverse job. Here, in logistic regression, the logit function maps $\beta'x$ to a probablity. As a result, the linear predictor $\beta'x$ can be interpreted in logistic regression as the conditional log odds: 
 $$log \frac{P(y_i=1|x_i=x)}{P(y_i=0|x_i=x)} = \beta'x$$
 
-### Model Selection with Backwards Elimination and the Bayesian Information Criterion
+**Model Selection with Backwards Elimination and the Bayesian Information Criterion**
 
 
-### Performance Measurement with the Receiver Operating Characteristic (ROC) Curve
+**Performance Measurement with the Receiver Operating Characteristic (ROC) Curve**
 
 
-### Goodness of Fit Test with the Hosmer-Lemeshow Statistic
+**Goodness of Fit Test with the Hosmer-Lemeshow Statistic**
 The Hosmer-Lemeshow Test is a goodness-of-fit test used for logistic regression models. It maps the expected probabilities against the actual observations by subgroups of the model population. The null hypothesis for the test is that the expected proportions from the model are the same as those observed across all subgroups. The alternative hypothesis is that the observed and expected proportions are not the same. 
 
 The Hosmer-Lemeshow statistic is given by:
