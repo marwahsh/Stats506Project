@@ -5,6 +5,7 @@ date: "11/27/2018"
 output: 
    html_document:
      toc: true
+     toc_depth: 2
 ---
 The goal of this tutorial is to demonstrate the use of Logistic Regression, and model diagnostics for this type of regression. We will start this tutorial by explaining the algorithm and the modeling behind Logistic regression. This would be followed by an illustrative example using three statistical software languages: Python, R, and STATA.
 
