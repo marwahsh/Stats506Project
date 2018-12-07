@@ -11,7 +11,7 @@ output:
 The goal of this tutorial is to demonstrate the use of Logistic Regression, and the model diagnostics for this type of regression. We will start this tutorial by explaining the algorithm and the modeling behind Logistic Regression. This would be followed by an illustrative example using three statistical software languages: Python, R, and STATA.
 
 ### Logistic Regression Algorithm
-**Logistic regression** is a predictive modelling algorithm that is used when the response variable $y$ is a binary categorical variable, i.e. $y$ can only take two values: 0 and 1. It is defined by the probability mass function:
+**Logistic regression** is a predictive modeling algorithm that is used when the response variable $y$ is a binary categorical variable, i.e. $y$ can only take two values: 0 and 1. It is defined by the probability mass function:
 $$P(y_i=1|x_i=x) = \frac{exp(\beta'x)}{1+exp(\beta'x)}$$
 which implies that 
 $$P(y_i=0|x_i=x) = \frac{1}{1+exp(\beta'x)}$$
@@ -44,7 +44,7 @@ In order to run this analysis in R, we need to install two key packages: "Farawa
 
 #### Loading Dataset and Numerical Summaries
 
-Once the dataframe "pima" is loaded, we can view the summaries of the variables by using the function, summary.
+Once the dataframe `pima` is loaded, we can view the summaries of the variables by using the function, summary.
 
 ```{r pima}
 library(faraway)
@@ -52,7 +52,7 @@ data(pima)
 summary(pima)
 ```
 
-The variables: "diastolic", "insulin", "glucose" and "bmi" exhibit zero values, since that is not physically possible we conclude that these are measurement errors or missing values might have been coded as 0. In an attempt to clean up the data, we remove these values.
+The variables: `diastolic`, `insulin`, `glucose` and `bmi` exhibit zero values, since that is not physically possible we conclude that these are measurement errors or missing values might have been coded as 0. In an attempt to clean up the data, we remove these values.
 
 ```{r message = FALSE}
 library(dplyr)
@@ -64,13 +64,13 @@ summary(pima_clean)
 
 We use the Backward elimination method to select the model specification, with the BIC as a guide. Please note that a lower BIC indicates improved fit of the model. So, we will be focusing on the individual p-values for the variables and the BIC for the model. 
 
-We start with a logistic model with "test" as the response variable and all the other variables as explanatory. The variable test is binary i.e. takes the value 0 and 1. We term a positive diatebetes detection as a "success" (test = 1) and the negative detection as a "failure" (test = 0).
+We start with a logistic model with `test` as the response variable and all the other variables as explanatory. The variable test is binary i.e. takes the value 0 and 1. We term a positive diatebetes detection as a "success" (test = 1) and the negative detection as a "failure" (test = 0).
 ```{r logisticmodel}
 Fit = glm(test~ ., family = binomial(link="logit"), data = pima_clean)
 summary(Fit)
 BIC(Fit)
 ```
-The stepwise elimination of variables that are individually statistically insignificant and using the BIC criterion, results in the final model specification with four independent variables: age, bmi, glucose, and diabetes.
+The stepwise elimination of variables that are individually statistically insignificant and using the BIC criterion, results in the final model specification with four independent variables: `age`, `bmi`, `glucose`, and `diabetes`.
 ```{r finalmodel}
 Fit_final = glm(test~ glucose+bmi+diabetes+age, family = binomial(link="logit"), data = pima_clean)
 summary(Fit_final)
@@ -130,7 +130,7 @@ legend(.6, .2, auc, title = "Area under the Curve", cex = .75)
 ```
 
 #### Summary
-In this tutorial we illustrated how to implement logistic regression and conduct model diagnostics. We used the "pima" dataset to study how the diabetes detection indicator is associated to variables, such as: age, bmi, glucose and the Diabetes pedigree score of women belonging to a Native Indian tribe. We used the Backward Elimination method to decide on the model specification for the logistic regression model. In order to assess the fit of our model we employed techniques such the Hosmer-Lemeshow Test and the ROC Curve, which led us to the conclusion that our model specification is a good fit for these data and hence our findings are meaningful.
+In this tutorial we illustrated how to implement logistic regression and conduct model diagnostics. We used the `pima` dataset to study how the diabetes detection indicator is associated to variables, such as: age, BMI, glucose and the diabetes pedigree score of women belonging to a Native Indian tribe. We used the Backward Elimination method to decide on the model specification for the logistic regression model. In order to assess the fit of our model we employed techniques such the Hosmer-Lemeshow Test and the ROC Curve, which led us to the conclusion that our model specification is a good fit for these data and hence our findings are meaningful.
 
 #### References
 
@@ -140,7 +140,7 @@ UCLA Institute for Digital Research and Education website: https://stats.idre.uc
 
 ### Python 
 
-This page uses the following packages in python. Please make sure that you can load them before trying to run the examples on this page.
+This page uses the following packages in Python. Please make sure that you can load them before trying to run the examples on this page.
 
 ```{r eval=FALSE}
 import pandas as pd                                ## data analysis package
@@ -158,7 +158,7 @@ from scipy.stats import chi2                       ## chi-square
 
 #### Loading Dataframe and Numerical Summaries
 
-In this tutorial, we use pima data as our datasets. In order to fit package in python. We first divide our model into dependent variable and independent variables. Besides, since all independent variables here are numeric, we do not need to change them into factor. However, when utilizing `sm.Logit()` in python, it doesn't include intercept, so we add a new column named intercept in the independent variable. The code is as following:
+In this tutorial, we use `pima` data as our dataset. In order to fit the package in Python. We first divide our model into dependent variable and independent variables. Besides, since all independent variables here are numeric, we do not need to change them into factors. However, when utilizing `sm.Logit()` in Python, it doesn't include intercept, so we add a new column named intercept in the independent variable. The code is as following:
 
 ```{r eval=FALSE}
 ## Load data
@@ -168,7 +168,7 @@ data=pd.read_csv("pima.txt",
 data['intercept'] = 1.0
 ```
 
-Once the dataframe `pima` is loaded, we can view the summaries of the variables by using the function in python, $data.describe()$.
+Once the dataframe `pima` is loaded, we can view the summaries of the variables by using the function in Python, $data.describe()$.
 
 ```{r eval=FALSE}
 ## Summary of data
@@ -193,7 +193,7 @@ y=data['test']
 X=data.drop(['test'], axis=1)
 ```
 
-After do the data cleaning, we have the result as following:
+After we do the data cleaning, we have the result as follows:
 
 ```{r eval=FALSE}
 ## Summary of data after data cleaning
@@ -311,7 +311,6 @@ knitr::include_graphics("./fig_py/fig3.png")
 
 #### Hosmer-Lemeshow Goodness of Fit Test
 
-
 The Hosmer-Lemeshow Test is a goodness-of-fit test for logistic regression models. We use this to compare the fitted values and observed values from the dataset.
 
 ```{r eval=FALSE}
@@ -343,7 +342,7 @@ The observed number of successes and failures in each interval are obtained by c
 knitr::include_graphics("./fig_py/fig10.png")
 ```
 
-The Hosmer-Lemeshow statistic is calculated from above table and we final calculate p-value as following:
+The Hosmer-Lemeshow statistic is calculated from the above table and we final calculate p-value as follows:
 
 ```{r fig_11, echo=FALSE, out.width = "150px",fig.align = 'center'}
 knitr::include_graphics("./fig_py/fig7.png")
@@ -375,7 +374,7 @@ knitr::include_graphics("./fig_py/fig4.png")
 ```
 #### Reciever Operating Characteristic (ROC) Curve
 
-When the prediction effect is good, the ROC curve is convex to the apex of the upper left corner. The diagonal line in the translation is tangent to the ROC curve to obtain a point where the TPR is large and the FPR is small. The better the model effect, the farther away the ROC curve is from the diagonal. In the extreme case, the ROC curve passes through the (0,1) point, that is, the positive example is all positive and the negative example is all negative. Under the ROC curve The area can quantitatively evaluate the effect of the model, which is recorded as AUC. The larger the AUC, the better the model effect.
+When the prediction effect is good, the ROC curve is convex to the apex of the upper left corner. The diagonal line in the translation is tangent to the ROC curve to obtain a point where the TPR is large and the FPR is small. The better the model effect, the farther away the ROC curve is from the diagonal. In the extreme case, the ROC curve passes through the (0,1) point, that is, the positive example is all positive and the negative example is all negative. The area under the ROC curve can quantitatively evaluate the effect of the model, which is recorded as AUC. The larger the AUC, the better the model effect.
 
 ```{r, eval=FALSE}
 # ROC curve
@@ -399,8 +398,7 @@ knitr::include_graphics("./fig_py/Log_ROC.png")
 ```
 
 #### Summary
-In this tutorial we illustrated how to implement logistic regression, select a model
-and conduct model diagnostics in python. 
+In this tutorial we illustrated how to implement logistic regression, select a model and conduct model diagnostics in Python. We were able to fit a model using Backward Elimination and the BIC criterion, then assess the resulting model using the classification matrix, Hosmer-Lemeshow test, and ROC curve. The resulting model was found to have good fit and accuracy. 
 
 #### References
 - https://towardsdatascience.com/building-a-logistic-regression-in-python-step-by-step-becd4d56c9c8
@@ -410,14 +408,11 @@ and conduct model diagnostics in python.
 
 ### STATA
 
-For Stata, all functions for the tests in this tutorials are built-in, 
-so there is no need to install or load any additional packages prior
-to performing the analysis in this tutorial. 
+For Stata, all functions for the tests in this tutorials are built-in, so there is no need to install or load any additional packages prior to performing the analysis in this tutorial. 
 
 #### Loading Dataset and Numerical Summaries
 
-The data set was exported from R into a comma-separated variable file 
-`pima.csv`. We can import and summarize the pima dataset from a CSV 
+The data set was exported from R into a comma-separated variable file `pima.csv`. We can import and summarize the pima dataset from a CSV 
 file using the following:
 
 ```
@@ -430,10 +425,7 @@ library(knitr)
 include_graphics("./fig_stata/data_summ1.png") 
 ```
 
-We see from the summary that the data for `bmi`, `diastolic`, `glucose`, and 
-`triceps` contain 0 values, which are not possible measures of these
-parameters. We must therefore clear rows with these values from our dataset.
-We can do this as follows:
+We see from the summary that the data for `bmi`, `diastolic`, `glucose`, and `triceps` contain 0 values, which are not possible measures of these parameters. We must therefore clear rows with these values from our dataset. We can do this as follows:
 
 ```
 drop if glucose == 0 | diastolic == 0 | triceps ==0 | insulin == 0 | bmi == 0
@@ -445,17 +437,11 @@ library(knitr)
 include_graphics("./fig_stata/data_summ2.png") 
 ```
 
-
-We can see that we now have 392 observations from the initial 768, and
-all values are now within reasonable range. 
+We can see that we now have 392 observations from the initial 768, and all values are now within reasonable range. 
 
 #### Model Selection using the Backward Elimination method
 
-For this model, our response variable is `test` which indicates whether
-or not a patient tested positive for diabetes. Note that the rest of the 
-variables are numeric and continuous, so we can use them as-is in our
-regression model. Using all other variables as independent variables,
-we can generate the full model using this code:
+For this model, our response variable is `test` which indicates whether or not a patient tested positive for diabetes. Note that the rest of the variables are numeric and continuous, so we can use them as-is in our regression model. Using all other variables as independent variables, we can generate the full model using this code:
 
 ```
 logit test pregnant glucose diastolic triceps insulin bmi diabetes age
@@ -467,10 +453,7 @@ include_graphics("./fig_stata/logit_full.png")
 ```
 
 
-We now want to determine the best fit model for the given data. Starting with the
-full model, we use backward elimination to drop variables one-by-one and the
-Bayesian Information Criterion (BIC) to determine if the model is an improvement
-from the previous model. 
+We now want to determine the best fit model for the given data. Starting with the full model, we use backward elimination to drop variables one-by-one and the Bayesian Information Criterion (BIC) to determine if the model is an improvement from the previous model. 
   
 We first get the BIC of the model using the following command: 
 ```
@@ -482,8 +465,7 @@ library(knitr)
 include_graphics("./fig_stata/bic_full.png") 
 ```
 
-To determine the order at which to drop the variables, we can use Stata's `stepwise`
-function using a 95% confidence level. 
+To determine the order at which to drop the variables, we can use Stata's `stepwise` function using a 95% confidence level. 
 ```
 stepwise, pr(0.05): logit test pregnant glucose diastolic triceps insulin bmi diabetes age
 ```
@@ -507,8 +489,7 @@ library(knitr)
 include_graphics("./fig_stata/bic_model1.png") 
 ```
 
-From this, we get a BIC of 391.8057, an improvement from the full model. 
-We then drop `insulin`:
+From this, we get a BIC of 391.8057, an improvement from the full model. We then drop `insulin`:
 
 ```
 // Model 2 (drop insulin):
@@ -575,14 +556,12 @@ library(knitr)
 include_graphics("./fig_stata/hl2.png") 
 ```
   
-Since the p-value is greater than $\alpha = 0.05$, we fail to reject the null hypothesis
-that the observed and expected proportions are the same across all groups. We can conclude that the observed and expected proportions are equal, meaning that the model 
+Since the p-value is greater than $\alpha = 0.05$, we fail to reject the null hypothesis that the observed and expected proportions are the same across all groups. We can conclude that the observed and expected proportions are equal, meaning that the model 
 selected is a good fit. 
 
 #### Confusion Matrix and Classification Report
 
-To determine the accuracy of our model, we can generate a classification report
-using the following command:
+To determine the accuracy of our model, we can generate a classification report using the following command:
 ```
 estat classification
 ```
@@ -592,13 +571,11 @@ library(knitr)
 include_graphics("./fig_stata/class.png") 
 ```
 
-The results show 79.59% correctly classified observations.
+The results show around a model accuracy of about 80%.
 
 #### Reciever Operating Characteristic (ROC) Curve
 
-These results, specifically the False Positive Rate and True Positive Rate
-can be plotted on a Receiving Operator Characteristic (ROC) Curve using 
-the following command:
+These results, specifically the False Positive Rate and True Positive Rate can be plotted on a Receiving Operator Characteristic (ROC) Curve using the following command:
 ```
 lroc, title("Receiving Operator Characteristic Curve") xtitle("False Positive Rate") ytitle("True Positive Rate")
 ```
@@ -613,13 +590,11 @@ library(knitr)
 include_graphics("./fig_stata/roc_auc.png") 
 ```
 
-We get an area under the ROC curve of 0.8605, which is close to 1.00, indicative of
-good model accuracy.
+We get an area under the ROC curve of 0.8605, which is close to 1.00, indicative of good model accuracy.
 
 #### Summary
 
-In this tutorial we illustrated how to implement logistic regression, select a model
-and conduct model diagnostics. 
+This tutorial illustrated how to logistic regression can be used on the `pima` dataset, and how diagnostics can be done on the fitted model using STATA. The `test` variable was used as the response variable to fit a model that predicts the probability of showing positive signs of diabetes based on the rest of the variables in the dataset. Using Backwards Elimination, we determined the best model which had `glucose`, `bmi`, `diabetes`, and `age` as explanatory variables. The Hosmer-Lemeshow test showed that the model predicted values close to those observed. The classification matrix and ROC Curve both indicated that the model had high accuracy. 
 
 #### References
 
