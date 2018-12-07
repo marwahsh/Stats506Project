@@ -37,13 +37,13 @@ Since this dataset contains a binary categorical variable `test`, logistic regre
 
 ### Model Diagnostics
 
-Subsequent to fitting a logistic regression model, we will conduct variable selection using **backwards elimination** and the **Bayesian Information Criterion (BIC)** as the selection criterion to determine the best model for the given data. Backward elimination is appropriate for the given data as we only have a few parameters available. Using BIC prevents overfitting by penalizing adding parameters to the model. The performance of the selected model will then be assessed using the **Receiver Operating Characteristic (ROC) Curve**. 
+Subsequent to fitting a logistic regression model, we will conduct variable selection using **backwards elimination** and the **Bayesian Information Criterion (BIC)** as the selection criterion to determine the best model for the given data. Backward elimination is appropriate for the given data as we only have a few parameters available. Using BIC prevents overfitting by penalizing adding parameters to the model. The performance of the selected model will be assessed using the **Receiver Operating Characteristic (ROC) Curve**. 
 
-The **Hosmer-Lemeshow Test** will then be conducted to assess the model's goodness of fit. The test compares the expected probabilities against the actual observations by subgroups of the model population. The null hypothesis for the test is that the expected proportions from the model are the same as those observed across all subgroups. The alternative hypothesis is that the observed and expected proportions are not the same. The Hosmer-Lemeshow statistic is given by:
-$$H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}$$
-Where $O_{1g}$ and  $E_{1g}$ are the observed and expected Y=1 events, respectively; $N_g$ is the total number of observations; $\pi_g$ is the predicted risk for the $g$th risk decile group; and $G$ is the number of groups. 
+The **Hosmer-Lemeshow Test** will be conducted to assess the model's goodness of fit. The test compares the expected probabilities against the actual observations by subgroups of the model population. The null hypothesis for the test is that the expected proportions from the model are the same as those observed across all subgroups, i.e., the model is a good fit. The alternative hypothesis is that the observed and expected proportions are not the same. The Hosmer-Lemeshow statistic is given by:
+$$H = \sum_{g=1}^G\frac{(O_{1g}-E_{1g})^2}{N_g\pi_g(1-\pi_g)}$$,
+where $O_{1g}$ and  $E_{1g}$ are the observed and expected Y=1 events, respectively; $N_g$ is the total number of observations; $\pi_g$ is the predicted risk for the $g$th risk decile group; and $G$ is the number of groups. 
 
-We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 2$ degrees of freedom to calculate for the p-value of the test. A high p-value would mean that the model generates fitted values equal to observed values, indicating a good fit. 
+We then compare this test statistic to the $\chi ^{2}$ distribution with $G − 2$ degrees of freedom to calculate for the p-value of the test. A high p-value would mean that the model generates fitted values equal to observed values, hence indicating a good fit. 
 
 
 ## Languages {.tabset}
@@ -62,7 +62,7 @@ data(pima)
 summary(pima)
 ```
 
-The variables: `diastolic`, `insulin`, `glucose` and `bmi` exhibit zero values, since that is not physically possible we conclude that these are measurement errors or missing values might have been coded as 0. In an attempt to clean up the data, we remove these values.
+The variables: `diastolic`, `insulin`, `glucose` and `bmi` exhibit zero values, since that is not physically possible we conclude that these are measurement errors or that missing values might have been coded as 0. In an attempt to clean up the data, we remove these values.
 
 ```{r message = FALSE}
 library(dplyr)
