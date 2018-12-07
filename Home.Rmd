@@ -408,7 +408,7 @@ In this tutorial we illustrated how to implement logistic regression, select a m
 
 ### STATA
 
-For Stata, all functions for the tests in this tutorials are built-in, so there is no need to install or load any additional packages prior to performing the analysis in this tutorial. 
+For STATA, all functions for the tests in this tutorials are built-in, so there is no need to install or load any additional packages prior to performing the analysis in this tutorial. 
 
 #### Loading Dataset and Numerical Summaries
 
